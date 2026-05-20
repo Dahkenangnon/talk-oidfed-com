@@ -1,0 +1,9 @@
+name = "talk-oidfed-com"
+pages_build_output_dir = "."
+compatibility_date = "2026-05-19"
+
+# Cloudflare Pages builds the Marp deck on every push. The Git integration
+# reads dashboard settings first; this block documents the same values so
+# `wrangler pages deploy` and a fresh dashboard setup produce the same output.
+[build]
+command = "cd openid-working-group-call-2026-05-21 && npm ci && npm run build"

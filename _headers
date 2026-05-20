@@ -1,0 +1,23 @@
+# Cloudflare Pages headers for talk.oidfed.com.
+# Short cache on HTML so fixes land fast; long cache on immutable assets.
+
+/*.css
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/*.js
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/*.svg
+  Cache-Control: public, max-age=2592000
+
+/*.png
+  Cache-Control: public, max-age=2592000
+
+/*.woff2
+  Cache-Control: public, max-age=2592000
+
+/*
+  Cache-Control: public, max-age=300, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: interest-cohort=()

@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+*.log
+.cache/
+
+# Marp-generated deck — built by Cloudflare Pages during deploy.
+# The hand-written root /index.html (landing redirect) stays tracked.
+/openid-working-group-call-*/index.html
+/openid-working-group-call-*/slides.pdf

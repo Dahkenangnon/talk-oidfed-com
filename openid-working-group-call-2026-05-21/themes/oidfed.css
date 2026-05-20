@@ -1,0 +1,991 @@
+/* @theme oidfed
+ *
+ * Marp theme for talk.oidfed.com.
+ * Palette derived from assets/oidfed-slide-intro.png — deep navy ink,
+ * royal cobalt brand, cool light surface, white capsule highlights.
+ *
+ * Composition per slide:
+ *   - 4px gradient accent rail at the top
+ *   - mono kicker label, top-left
+ *   - ghosted chapter numeral (set per-slide via --i CSS var), top-right
+ *   - title + body + bullets
+ *   - footer with date, event, URL, pagination
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+/* ============================================================
+ * Tokens
+ * ============================================================ */
+:root {
+  --surface:        #eef0f4;
+  --surface-paper:  #ffffff;
+  --surface-panel:  #f6f8fb;
+  --surface-grid:   #dde2eb;
+  --surface-deep:   #0e1426;
+
+  --ink:            #0e1426;
+  --ink-strong:     #050a18;
+  --ink-mid:        #232a3d;
+  --ink-muted:      #525a6e;
+  --ink-dim:        #8089a0;
+  --ink-faint:      #b3bbcc;
+  --ink-hairline:   #d8dde7;
+
+  --brand-50:  #eaeefb;
+  --brand-100: #c7d2f4;
+  --brand-200: #98aaea;
+  --brand-300: #6a83e0;
+  --brand-400: #4862d4;
+  --brand-500: #3a59c8;
+  --brand-600: #2f48ad;
+  --brand-700: #233b9b;
+  --brand-800: #1a2d7a;
+  --brand-900: #11215c;
+
+  --hi-link:    #2046c8;
+  --hi-link-2:  #4a6bda;
+
+  --success: #207a4d;
+
+  --r-xs:  3px;
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  14px;
+
+  --ease:   cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============================================================
+ * Slide base — 1280×720
+ * ============================================================ */
+section {
+  width: 1280px;
+  height: 720px;
+  padding: 88px 96px 96px;
+  background: var(--surface-paper);
+  background-image:
+    linear-gradient(to right, var(--surface-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--surface-grid) 1px, transparent 1px);
+  background-size: 96px 96px;
+  background-position: -1px -1px;
+  background-blend-mode: multiply;
+  color: var(--ink);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-feature-settings: "ss01" 1, "cv11" 1, "calt" 1;
+  font-size: 22px;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  position: relative;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Top accent rail */
+section::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg,
+                              var(--brand-900) 0%,
+                              var(--brand-500) 55%,
+                              var(--hi-link-2) 100%);
+}
+
+/* Note: the bottom-right trust-chain ring used to live in `section::after`,
+ * but ::after is now reserved for the chapter numeral. The ring is drawn
+ * via the third layer in `background-image` further down. */
+
+/* ============================================================
+ * Typography
+ * ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Inter", sans-serif;
+  color: var(--ink-strong);
+  font-weight: 800;
+  margin: 0 0 0.45em;
+  text-transform: none;
+}
+
+h1 {
+  font-size: 52px;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  margin-bottom: 0.25em;
+}
+h2 {
+  font-size: 38px;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+  position: relative;
+  padding-bottom: 0.4em;
+  margin-bottom: 0.55em;
+}
+h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 72px;
+  height: 3px;
+  background: var(--brand-500);
+  border-radius: 2px;
+}
+h3 {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin: -0.2em 0 1em;
+}
+h4 {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-700);
+  margin: 0 0 0.6em;
+}
+
+p, li {
+  font-size: 22px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0.35em 0;
+}
+
+strong { color: var(--ink-strong); font-weight: 700; }
+em     { color: var(--ink-mid); font-style: italic; }
+
+a {
+  color: var(--brand-700);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(58, 89, 200, 0.45);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+ * Code
+ * ============================================================ */
+code, pre {
+  font-family: "JetBrains Mono", monospace;
+  font-feature-settings: "calt" 1, "liga" 0;
+}
+:not(pre) > code {
+  color: var(--brand-700);
+  background: var(--brand-50);
+  border: 1px solid rgba(58, 89, 200, 0.18);
+  padding: 0.06em 0.4em;
+  border-radius: var(--r-xs);
+  font-size: 0.9em;
+}
+pre {
+  background: var(--surface-panel);
+  border: 1px solid var(--ink-hairline);
+  border-left: 3px solid var(--brand-500);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 0.9em 1.1em;
+  margin: 0.7em 0;
+  max-width: 100%;
+}
+pre code {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+/* ============================================================
+ * Lists
+ * ============================================================ */
+ul, ol {
+  margin: 0.5em 0;
+  padding-left: 1.4em;
+}
+ul li::marker { color: var(--brand-500); }
+ol li::marker {
+  color: var(--brand-700);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+}
+
+/* Marp's "header" / "footer" directives — we use them as the slide kicker
+ * (top-left) and the bottom info strip. */
+header {
+  position: absolute;
+  top: 32px;
+  left: 96px;
+  right: 240px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 16px;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+}
+/* The top-left kicker shows only the deck title (Marp's `header:`
+ * directive). We deliberately do not render a per-slide "NN / total"
+ * counter there — the ghosted chapter numeral top-right already
+ * carries the slide index, and the project title needs to read
+ * cleanly with no chrome competing for the same row. */
+
+footer {
+  position: absolute;
+  bottom: 28px;
+  left: 96px;
+  right: 96px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border-top: 1px solid var(--ink-hairline);
+  padding: 12px 0 0;
+  background: transparent;
+  margin: 0;
+}
+
+/* Compose section backgrounds — grid + trust-chain ring watermark.
+ * The chapter numeral lives in ::after, so the ring has to ride along
+ * the background-image stack. */
+section {
+  background-image:
+    linear-gradient(to right, var(--surface-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--surface-grid) 1px, transparent 1px),
+    radial-gradient(circle at calc(100% - 92px) calc(100% - 92px),
+                    transparent 0 8px,
+                    var(--brand-300) 8px  9px,
+                    transparent 9px  18px,
+                    var(--brand-400) 18px 19px,
+                    transparent 19px 30px,
+                    var(--brand-500) 30px 31px,
+                    transparent 31px 200%);
+  background-size: 96px 96px, 96px 96px, auto;
+  background-repeat: repeat, repeat, no-repeat;
+  background-position: -1px -1px, -1px -1px, 0 0;
+}
+
+/* Ghosted chapter numeral, top-right corner. Each section gets its
+ * concrete two-digit index via :nth-of-type so we never depend on
+ * CSS counter-increment surviving bespoke's display:none. */
+section::after {
+  content: "";
+  position: absolute;
+  top: -22px;
+  right: 56px;
+  width: auto;
+  height: auto;
+  background: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 900;
+  font-size: 240px;
+  line-height: 0.84;
+  letter-spacing: -0.07em;
+  color: var(--brand-500);
+  opacity: 0.07;
+  pointer-events: none;
+  user-select: none;
+}
+section:nth-of-type(1)::after  { content: "01"; }
+section:nth-of-type(2)::after  { content: "02"; }
+section:nth-of-type(3)::after  { content: "03"; }
+section:nth-of-type(4)::after  { content: "04"; }
+section:nth-of-type(5)::after  { content: "05"; }
+section:nth-of-type(6)::after  { content: "06"; }
+section:nth-of-type(7)::after  { content: "07"; }
+section:nth-of-type(8)::after  { content: "08"; }
+section:nth-of-type(9)::after  { content: "09"; }
+section:nth-of-type(10)::after { content: "10"; }
+section:nth-of-type(11)::after { content: "11"; }
+section:nth-of-type(12)::after { content: "12"; }
+section:nth-of-type(13)::after { content: "13"; }
+section:nth-of-type(14)::after { content: "14"; }
+
+/* We don't suppress Marp's pagination via ::before — that would also kill
+ * our top accent rail. Marp's default chip lives in section::after, which
+ * we've already overridden above with the chapter numeral. */
+
+/* ============================================================
+ * Body bullets — title + small description per item
+ * The pattern: <li><strong>Topic</strong> — short description</li>
+ * ============================================================ */
+section ul.body-bullets,
+section .body-bullets ul,
+section .bullets ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.4em 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+section ul.body-bullets li,
+section .body-bullets ul li,
+section .bullets ul li {
+  position: relative;
+  padding: 4px 0 4px 30px;
+  font-size: 22px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+  max-width: 52ch;
+}
+section ul.body-bullets li::before,
+section .body-bullets ul li::before,
+section .bullets ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 14px;
+  height: 2px;
+  background: var(--brand-500);
+}
+section ul.body-bullets li strong,
+section .body-bullets ul li strong,
+section .bullets ul li strong {
+  color: var(--ink-strong);
+  font-weight: 700;
+}
+section ul.body-bullets li em,
+section .body-bullets ul li em,
+section .bullets ul li em {
+  color: var(--ink-muted);
+  font-style: normal;
+  font-size: 0.78em;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.04em;
+  display: block;
+  margin-top: 4px;
+}
+
+/* ============================================================
+ * Pills — runtime / spec badge row
+ * ============================================================ */
+.pills, .runtime-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 1.2em 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pills li, .pills span,
+.runtime-row li, .runtime-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border: 1px solid var(--brand-200);
+  background: var(--surface-paper);
+  color: var(--brand-700);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  line-height: 1;
+  font-weight: 700;
+}
+.pills li.pass::before,
+.runtime-row li.pass::before,
+.runtime-row span.pass::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 2px rgba(32, 122, 77, 0.14);
+}
+.pills li.pass,
+.runtime-row li.pass,
+.runtime-row span.pass {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+/* ============================================================
+ * Cards — used on the sibling-apps slide
+ * ============================================================ */
+.cards {
+  display: grid;
+  gap: 18px;
+  margin-top: 8px;
+}
+.cards.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.card {
+  position: relative;
+  background: var(--surface-paper);
+  border: 1px solid var(--ink-hairline);
+  border-radius: var(--r-md);
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 156px;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--brand-500);
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+.card .name {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-strong);
+  letter-spacing: -0.01em;
+}
+.card .url {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--brand-700);
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+.card .desc {
+  font-size: 15px;
+  color: var(--ink-mid);
+  line-height: 1.45;
+  margin: 4px 0 0;
+}
+
+/* Package strip — compact 5-up */
+.pkgs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 1em 0;
+  padding: 0;
+  list-style: none;
+}
+.pkgs li {
+  position: relative;
+  background: var(--surface-paper);
+  border: 1px solid var(--ink-hairline);
+  border-radius: var(--r-md);
+  padding: 14px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pkgs li::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-500);
+  box-shadow: 0 0 0 2px rgba(58, 89, 200, 0.14);
+}
+.pkgs li strong {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+.pkgs li span {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  line-height: 1.42;
+}
+
+/* ============================================================
+ * Two-column layout
+ * ============================================================ */
+.cols-2-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* ============================================================
+ * Demo list — numbered steps with mono indices
+ * ============================================================ */
+.demo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.7em 0 0;
+  counter-reset: step;
+  max-width: 44ch;
+}
+.demo-list li {
+  counter-increment: step;
+  position: relative;
+  padding: 0.7em 0 0.7em 3.4em;
+  border-bottom: 1px solid var(--ink-hairline);
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--ink);
+}
+.demo-list li:last-child { border-bottom: 0; }
+.demo-list li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--brand-700);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 9px;
+  border: 1px solid var(--brand-300);
+  border-radius: var(--r-xs);
+  background: var(--brand-50);
+}
+
+/* ============================================================
+ * Cover slide — section.cover
+ * ============================================================ */
+section.cover {
+  padding-top: 110px;
+  padding-bottom: 130px;
+}
+section.cover .hero {
+  max-width: 56%;
+}
+section.cover h1 {
+  font-size: 88px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.88;
+  background: linear-gradient(118deg, var(--brand-900) 0%, var(--brand-500) 55%, var(--hi-link-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+}
+section.cover .lede {
+  font-size: 26px;
+  color: var(--ink-mid);
+  font-weight: 400;
+  line-height: 1.28;
+  margin: 14px 0 0;
+  max-width: 22ch;
+}
+section.cover .image {
+  position: absolute;
+  right: 80px;
+  top: 152px;
+  width: 540px;
+  max-height: 360px;
+}
+section.cover .image img {
+  width: 100%;
+  height: auto;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+section.cover .meta {
+  position: absolute;
+  left: 96px;
+  right: 96px;
+  bottom: 74px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+section.cover .meta .name {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink-strong);
+  letter-spacing: -0.01em;
+}
+section.cover .meta a { color: var(--brand-700); border-bottom: 0; }
+section.cover .meta .dot { color: var(--ink-faint); padding: 0 6px; }
+
+/* ============================================================
+ * Closing slide — section.closing
+ * Centered hero "Thank you." (very large), then a short open
+ * statement, contact line, and a "After WG Call" URL ledger.
+ * ============================================================ */
+section.closing {
+  padding-top: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: flex-start;
+}
+section.closing h1 {
+  font-size: 130px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  background: linear-gradient(118deg, var(--brand-900) 0%, var(--brand-500) 55%, var(--hi-link-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0 0 0.1em;
+}
+section.closing .open-line {
+  font-size: 22px;
+  color: var(--ink-mid);
+  font-weight: 400;
+  margin: 18px auto 24px;
+  max-width: 56ch;
+  line-height: 1.45;
+}
+section.closing .contact-line {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  color: var(--ink);
+  margin: 0 auto;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+section.closing .contact-line .name {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink-strong);
+  letter-spacing: -0.01em;
+  display: block;
+  margin-bottom: 6px;
+}
+section.closing .contact-line a {
+  color: var(--brand-700);
+  border-bottom: 0;
+  font-weight: 500;
+}
+section.closing .contact-line .sep { color: var(--ink-faint); padding: 0 6px; }
+
+section.closing .after-card {
+  margin-top: 28px;
+  background: var(--surface-paper);
+  border: 1px solid var(--ink-hairline);
+  border-radius: var(--r-md);
+  padding: 16px 22px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  text-align: left;
+}
+section.closing .after-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--brand-500);
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+section.closing .after-card .heading {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+section.closing .after-card .urls {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--brand-700);
+}
+section.closing .after-card .urls a { color: var(--brand-700); border-bottom: 0; }
+section.closing .after-card .urls .sep { color: var(--ink-faint); padding: 0 6px; }
+
+/* ============================================================
+ * "Demo · not production" tag — used wherever the demo federation
+ * is referenced, so the audience never confuses it with real-world
+ * adoption.
+ * ============================================================ */
+.demo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border: 1px solid var(--ink-hairline);
+  background: var(--surface-panel);
+  color: var(--ink-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  line-height: 1.4;
+}
+.demo-tag::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-400);
+}
+
+/* ============================================================
+ * Feedback-detail slide — issue / description / proposal / example
+ * Four labelled rows on a hairline-divided grid.
+ * ============================================================ */
+.fbd {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  column-gap: 28px;
+  row-gap: 14px;
+  margin-top: 8px;
+  max-width: 1040px;
+}
+.fbd .lbl {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-weight: 700;
+  padding-top: 4px;
+  align-self: start;
+}
+.fbd .row {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink-hairline);
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.fbd .row:last-of-type { border-bottom: 0; }
+.fbd .row strong { color: var(--ink-strong); }
+.fbd .row code {
+  font-size: 0.92em;
+}
+/* Example panel inside a feedback-detail slide. The same rule binds
+ * whether the example is rendered with `<div class="ex">` or
+ * `<pre class="ex">`, so multi-line code can use either form without
+ * losing the cobalt rail or font scale. */
+.fbd .ex,
+.fbd pre.ex {
+  background: var(--surface-panel);
+  border: 1px solid var(--ink-hairline);
+  border-left: 3px solid var(--brand-500);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 10px 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+  white-space: pre-wrap;
+  margin: 4px 0 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+.fbd .lbl-issue     { color: var(--brand-700); }
+.fbd .lbl-proposal  { color: var(--brand-700); }
+
+/* Three-up feedback overview (slide 7) — one short card per item */
+.fb-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 12px;
+}
+.fb-overview .item {
+  position: relative;
+  background: var(--surface-paper);
+  border: 1px solid var(--ink-hairline);
+  border-radius: var(--r-md);
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 220px;
+}
+.fb-overview .item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--brand-500);
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+.fb-overview .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-700);
+}
+.fb-overview .title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--ink-strong);
+  line-height: 1.15;
+}
+.fb-overview .one-liner {
+  font-size: 15.5px;
+  color: var(--ink-mid);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Side-by-side demo apps + resources on slide 4 */
+.demo-apps {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.85fr;
+  gap: 18px;
+  margin-top: 8px;
+}
+.demo-apps .app {
+  position: relative;
+  background: var(--surface-paper);
+  border: 1px solid var(--ink-hairline);
+  border-radius: var(--r-md);
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.demo-apps .app::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--brand-500);
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+.demo-apps .app.resources::before { background: var(--ink-hairline); }
+.demo-apps .app .head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.demo-apps .app .name {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+.demo-apps .app .desc {
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 1.45;
+  margin: 0;
+}
+.demo-apps .app.resources .desc { color: var(--ink-muted); font-size: 13px; }
+.demo-apps .app.resources .name { font-weight: 500; color: var(--ink-mid); font-size: 13px; text-transform: lowercase; }
+
+/* Quick test card on slide 4 — three-row CLI / browser / explorer cheatsheet */
+.test-card {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 10px 18px;
+  background: var(--surface-panel);
+  border: 1px solid var(--ink-hairline);
+  border-left: 3px solid var(--brand-500);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 14px 18px;
+  margin-top: 12px;
+  font-size: 14px;
+  align-items: baseline;
+  max-width: 920px;
+}
+.test-card .l {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-weight: 700;
+}
+.test-card .v {
+  font-family: "JetBrains Mono", monospace;
+  color: var(--ink);
+  line-height: 1.55;
+  font-size: 13px;
+}
+.test-card .v code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--brand-700);
+  font-size: inherit;
+}
+
+/* ============================================================
+ * Section-marker slide — section.section-marker
+ * Used between the introduction half and the feedback half.
+ * ============================================================ */
+section.section-marker {
+  padding-top: 220px;
+  background: var(--surface-paper);
+}
+section.section-marker h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--brand-700);
+  margin: 0 0 16px;
+}
+section.section-marker h1 {
+  font-size: 80px;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  color: var(--ink-strong);
+}
+section.section-marker p {
+  margin-top: 28px;
+  font-size: 22px;
+  color: var(--ink-muted);
+  max-width: 40ch;
+}
+
+/* ============================================================
+ * Print
+ * ============================================================ */
+@media print {
+  section {
+    background: #ffffff !important;
+    background-image: none !important;
+  }
+}

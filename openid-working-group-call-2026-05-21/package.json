@@ -1,0 +1,14 @@
+{
+  "name": "talk-oidfed-com-2026-05-21",
+  "private": true,
+  "description": "Marp deck for the OpenID Foundation AB/Connect WG slot on 2026-05-21",
+  "scripts": {
+    "build": "marp deck.md --html --theme themes/oidfed.css -o index.html",
+    "build:pdf": "marp deck.md --html --theme themes/oidfed.css --pdf -o slides.pdf",
+    "serve": "marp deck.md --html --theme themes/oidfed.css --server .",
+    "watch": "marp deck.md --html --theme themes/oidfed.css --watch -o index.html"
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.1.2"
+  }
+}
