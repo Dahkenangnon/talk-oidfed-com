@@ -27,7 +27,7 @@ html: true
 </div>
 
 <div class="meta">
-  <div class="name">Justin Dah-Kenangnon</div>
+  <div class="name">Yamonwan Justin Dah-kenangnon</div>
   <div>
     <a href="https://github.com/Dahkenangnon">github.com/Dahkenangnon</a>
     <span class="dot">·</span>
@@ -39,13 +39,27 @@ html: true
 
 ---
 
-## Justin Yamonwan Dah-kenangnon
+## Yamonwan Justin Dah-kenangnon
+
+<div class="speaker-grid">
+
+<div class="speaker-bio">
 
 <ul class="body-bullets">
   <li><strong>Background</strong> — Engineering graduate in Mathematics &amp; Modeling<em>software engineer with a focus on identity and integration work</em></li>
   <li><strong>OIDC</strong> — integrations mostly built on Filip Skokan's <code>node-oidc-provider</code><em>deploying real OPs and consuming them as RPs</em></li>
   <li><strong>Federation</strong> — came in cold to the OpenID Federation spec<em>this implementation is the way I learned it — the source of today's feedback</em></li>
 </ul>
+
+</div>
+
+<aside class="speaker-portrait">
+  <img src="assets/yjdk-avatar.jpg" alt="Yamonwan Justin Dah-kenangnon">
+  <p class="handle">@Dahkenangnon</p>
+  <p class="moto">maths · code · internet standards</p>
+</aside>
+
+</div>
 
 ---
 
@@ -66,7 +80,6 @@ html: true
 <div class="app">
   <div class="head">
     <span class="name">fed.oidfed.com</span>
-    <span class="demo-tag">Demo · not production</span>
   </div>
   <p class="desc">Reference federation deployment — six topologies built on the @oidfed packages, exercised end-to-end to validate spec compliance.</p>
 </div>
@@ -89,38 +102,194 @@ html: true
 
 ---
 
-## The demo federation
+## What each library runs
+### Four spec packages &nbsp;·&nbsp; roles in any federation
 
-<span class="demo-tag">Demo · validates spec compliance · not real-world adoption</span>
+<div class="libs-grid">
 
-<ul class="body-bullets" style="margin-top:18px">
-  <li><strong>Six topologies live</strong> — single-anchor · hierarchical · multi-anchor · cross-federation · constrained · policy-operators<em>each one exercises a different corner of the spec on shared @oidfed/* code</em></li>
-  <li><strong>One Node process</strong> — vhost-dispatched · Hono for federation-only entities · Express + <code>node-oidc-provider</code> for OPs<em>same source tree mirrors the upstream e2e bed at <code>oidfed/tests/e2e/</code></em></li>
-</ul>
+<svg class="libs-svg" viewBox="0 0 460 320" aria-hidden="true">
+  <defs>
+    <linearGradient id="libchain" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a59c8"/>
+      <stop offset="100%" stop-color="#6a83e0"/>
+    </linearGradient>
+    <marker id="libarrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M 0 0 L 8 4.5 L 0 9 z" fill="#3a59c8"/>
+    </marker>
+  </defs>
+  <g class="edges" fill="none" stroke="url(#libchain)" stroke-width="2">
+    <line x1="92"  y1="108" x2="92"  y2="206" marker-end="url(#libarrow)"/>
+    <line x1="230" y1="108" x2="230" y2="206" marker-end="url(#libarrow)"/>
+    <line x1="368" y1="108" x2="368" y2="206" marker-end="url(#libarrow)"/>
+  </g>
+  <g class="edge-labels">
+    <text x="100" y="158" class="dep">uses</text>
+    <text x="238" y="158" class="dep">uses</text>
+    <text x="376" y="158" class="dep">uses</text>
+  </g>
+  <g class="lib-box">
+    <rect x="25"  y="30" width="135" height="78" rx="10"/>
+    <text x="92"  y="60" text-anchor="middle" class="name">@oidfed/authority</text>
+    <text x="92"  y="82" text-anchor="middle" class="sub">TAs · Intermediates</text>
+  </g>
+  <g class="lib-box">
+    <rect x="163" y="30" width="135" height="78" rx="10"/>
+    <text x="230" y="60" text-anchor="middle" class="name">@oidfed/leaf</text>
+    <text x="230" y="82" text-anchor="middle" class="sub">OPs · RPs · RSs</text>
+  </g>
+  <g class="lib-box">
+    <rect x="301" y="30" width="135" height="78" rx="10"/>
+    <text x="368" y="60" text-anchor="middle" class="name">@oidfed/oidc</text>
+    <text x="368" y="82" text-anchor="middle" class="sub">RP/OP reg flows</text>
+  </g>
+  <g class="lib-box core">
+    <rect x="25" y="216" width="411" height="80" rx="10"/>
+    <text x="230" y="248" text-anchor="middle" class="name">@oidfed/core</text>
+    <text x="230" y="270" text-anchor="middle" class="sub">primitives · trust-chain · schemas · constants</text>
+  </g>
+</svg>
 
-<div class="test-card">
-  <span class="l">Browser</span>
-  <span class="v">Sign in at <code>rp1.single.fed.oidfed.com</code> or <code>rp2.single.fed.oidfed.com</code></span>
-  <span class="l">CLI</span>
-  <span class="v"><code>oidfed resolve https://single.fed.oidfed.com</code> &nbsp;·&nbsp; <code>oidfed chain &lt;leaf&gt; --ta &lt;ta&gt;</code></span>
-  <span class="l">Explorer</span>
-  <span class="v">Paste any entity URL into <code>explore.oidfed.com</code> — chain &amp; metadata rendered live</span>
+<div class="libs-list">
+
+<div class="lib-row">
+  <span class="pkg">@oidfed/core</span>
+  <p class="role">Foundation. Entity statements, trust-chain resolution, crypto, schemas, constants — every other package depends on it.</p>
+  <p class="api"><code>resolveTrustChainForAnchor</code> &nbsp;·&nbsp; <code>generateSigningKey</code> &nbsp;·&nbsp; <code>entityId(url)</code></p>
 </div>
+
+<div class="lib-row">
+  <span class="pkg">@oidfed/authority</span>
+  <p class="role">Runs Trust Anchors and Intermediates. All federation endpoints, subordinate management, key lifecycle, trust-mark issuance &amp; status.</p>
+  <p class="api"><code>createAuthorityServer({…}).handler()</code></p>
+</div>
+
+<div class="lib-row">
+  <span class="pkg">@oidfed/leaf</span>
+  <p class="role">Any entity at the edge — OPs, RPs, RSs. Serves <code>/.well-known/openid-federation</code>, discovers and validates peers.</p>
+  <p class="api"><code>createLeafEntity({…}).handler()</code> &nbsp;·&nbsp; <code>discoverEntity(id, anchors)</code></p>
+</div>
+
+<div class="lib-row">
+  <span class="pkg">@oidfed/oidc</span>
+  <p class="role">OIDC / OAuth 2.0 profile of federation. RP- and OP-side automatic &amp; explicit registration, Request Object validation.</p>
+  <p class="api"><code>automaticRegistration</code> &nbsp;·&nbsp; <code>processAutomaticRegistration</code> &nbsp;·&nbsp; <code>explicitRegistration</code> &nbsp;·&nbsp; <code>processExplicitRegistration</code></p>
+</div>
+
+</div>
+
+</div>
+
+---
+
+## The demo federation
+### Single-anchor topology &nbsp;·&nbsp; what we will exercise live
+
+<div class="topo-grid">
+
+<svg class="topo-svg" viewBox="0 0 460 310" aria-hidden="true">
+  <defs>
+    <linearGradient id="chain" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a59c8"/>
+      <stop offset="100%" stop-color="#6a83e0"/>
+    </linearGradient>
+  </defs>
+  <g class="edges" fill="none" stroke="url(#chain)" stroke-width="1.5">
+    <path d="M 230 90 Q 230 140 90 220"/>
+    <path d="M 230 90 Q 220 140 230 220"/>
+    <path d="M 230 90 Q 230 140 370 220"/>
+  </g>
+  <g class="ta">
+    <text x="230" y="14" text-anchor="middle" class="sub">ta.single.fed.oidfed.com</text>
+    <text x="230" y="32" text-anchor="middle">Trust Anchor</text>
+    <circle cx="230" cy="62" r="22"/>
+    <circle cx="230" cy="62" r="10" class="inner"/>
+  </g>
+  <g class="leaf">
+    <circle cx="90" cy="232" r="16"/>
+    <circle cx="90" cy="232" r="7" class="inner"/>
+    <text x="90" y="264" text-anchor="middle">OP</text>
+    <text x="90" y="282" text-anchor="middle" class="sub">op.single.fed…</text>
+  </g>
+  <g class="leaf">
+    <circle cx="230" cy="232" r="16"/>
+    <circle cx="230" cy="232" r="7" class="inner"/>
+    <text x="230" y="264" text-anchor="middle">RP1</text>
+    <text x="230" y="282" text-anchor="middle" class="sub">rp1.single.fed…</text>
+  </g>
+  <g class="leaf">
+    <circle cx="370" cy="232" r="16"/>
+    <circle cx="370" cy="232" r="7" class="inner"/>
+    <text x="370" y="264" text-anchor="middle">RP2</text>
+    <text x="370" y="282" text-anchor="middle" class="sub">rp2.single.fed…</text>
+  </g>
+</svg>
+
+<div class="topo-list">
+
+<div class="topo-row">
+  <span class="role">Trust Anchor</span>
+  <span class="url">ta.single.fed.oidfed.com</span>
+  <span class="note">runs federation endpoints (fetch, list, resolve, trust-mark)</span>
+</div>
+
+<div class="topo-row">
+  <span class="role">OP (leaf)</span>
+  <span class="url">op.single.fed.oidfed.com</span>
+  <span class="note">supports <strong>automatic</strong> &amp; <strong>explicit</strong> client registration · ES256 · scopes <code>openid profile email</code></span>
+</div>
+
+<div class="topo-row">
+  <span class="role">RP1 (leaf)</span>
+  <span class="url">rp1.single.fed.oidfed.com</span>
+  <span class="note"><code>client_registration_types: ["automatic"]</code></span>
+</div>
+
+<div class="topo-row">
+  <span class="role">RP2 (leaf)</span>
+  <span class="url">rp2.single.fed.oidfed.com</span>
+  <span class="note"><code>client_registration_types: ["explicit"]</code></span>
+</div>
+
+</div>
+
+</div>
+
+<p class="topo-foot">Source: <a href="https://github.com/Dahkenangnon/fed-oidfed-com/blob/main/src/topologies/single-anchor.ts">github.com/Dahkenangnon/fed-oidfed-com/blob/main/src/topologies/single-anchor.ts</a></p>
 
 ---
 
 ## Live demo
 
-<span class="demo-tag">Demo federation · not production</span>
+<div class="demo-grid">
 
-<ol class="demo-list" style="margin-top:18px">
+<div class="demo-main">
+
+<ol class="demo-list">
   <li><code>rp1.single.fed.oidfed.com</code> — <strong>automatic</strong> client registration</li>
   <li><code>rp2.single.fed.oidfed.com</code> — <strong>explicit</strong> client registration</li>
   <li><code>explore.oidfed.com</code> — the same federation, visualised</li>
 </ol>
 
-<pre class="ex" style="margin-top:18px;max-width:880px"># Inspect any participant straight from the terminal — no install needed:
+<pre class="ex"># Inspect any participant straight from the terminal — no install needed:
 $ npx -y -p @oidfed/cli oidfed entity https://op.single.fed.oidfed.com</pre>
+
+</div>
+
+<aside class="demo-side">
+  <span class="eyebrow">Also in the demo fed</span>
+  <h3>5 more topologies</h3>
+  <ul class="list">
+    <li>hierarchical</li>
+    <li>multi-anchor</li>
+    <li>cross-federation</li>
+    <li>constrained</li>
+    <li>policy-operators</li>
+  </ul>
+  <p class="note">The <code>single</code> topology is what we demo today — the other five exercise different corners of the spec on the same <code>@oidfed/*</code> code. Explore any of them via the same CLI or <code>explore.oidfed.com</code>.</p>
+  <p class="cta">→ <a href="https://fed.oidfed.com">fed.oidfed.com</a></p>
+</aside>
+
+</div>
 
 ---
 
@@ -160,7 +329,7 @@ $ npx -y -p @oidfed/cli oidfed entity https://op.single.fed.oidfed.com</pre>
 <div class="row">In our deployment, an embedded <code>trust_chain</code> in the Request Object's JWS header pushes the <code>?request=&lt;JWT&gt;</code> query carrier past common HTTP-intermediary defaults.</div>
 
 <span class="lbl">Description</span>
-<div class="row">A three-statement chain (Leaf + Intermediate + TA) is already 8–12&nbsp;KB — past nginx's default <code>proxy_buffer_size</code> of 8&nbsp;KB. The 502 fired on the <strong>smallest interoperable topology</strong>, not on a deep edge case.<br><br>The spec already names the carriers that handle this in §12.1.1.1.1 — <em>"it may be necessary to use the HTTP POST method, a request_uri, or PAR for the request."</em> In our deployment, that note turned out to describe the default path, not an edge case.</div>
+<div class="row">A three-statement chain (Leaf + Intermediate + TA) is already 8–12&nbsp;KB — past nginx's default <code>proxy_buffer_size</code> of 8&nbsp;KB. The 502 fired on the <strong>smallest real federation</strong>, not on a deep edge case.<br><br>The spec already names the carriers that handle this in §12.1.1.1.1 — <em>"… it may be necessary to use the HTTP POST method, a <code>request_uri</code>, or a Pushed Authorization Request [RFC 9126] for the request."</em> In our deployment, that note turned out to describe the default path, not an edge case.</div>
 
 </div>
 
@@ -236,7 +405,7 @@ request=&lt;same JWT&gt;</pre>
 <div class="fbd">
 
 <span class="lbl lbl-issue">Observation</span>
-<div class="row">§6's extension points (operators, constraints) are made to be shared as code and stay static. They aren't shaped to carry decisions whose inputs change <strong>between requests</strong> — entity-graph state, federation-operational mode, dynamic naming.</div>
+<div class="row">§6's extension points (operators, constraints) are designed to be distributed as code and stay static. They aren't shaped to carry decisions whose inputs change <strong>between requests</strong> — entity-graph state, federation-operational mode, dynamic naming.</div>
 
 <span class="lbl">Description</span>
 <div class="row">Real cases we ran into: delegation budgets that should narrow during incidents, federation-wide capacity limits, entity-reliability numbers over sliding windows.<br><br>§6.1.1 <em>Determinism</em> rightly keeps these out of static metadata-policy — so this kind of decision can't live inside <code>metadata_policy</code>. Federations that need it today have to build it outside the chain, and lose the federation's signature on the result.</div>
@@ -251,7 +420,7 @@ request=&lt;same JWT&gt;</pre>
 <div class="fbd">
 
 <span class="lbl lbl-proposal">Direction</span>
-<div class="row">The shape we have in mind is an opt-in <code>federation_policy_evaluation_endpoint</code> that sits next to the static §6 layer — it never replaces it. The endpoint returns a signed decision with <code>iat</code>/<code>exp</code>, so cached decisions stay deterministic inside the window.<br><br>The decision can only narrow what the static layer already allows; it can never loosen it — §6.1.1 Hierarchy preserved.</div>
+<div class="row">What we have in mind is an opt-in <code>federation_policy_evaluation_endpoint</code> that sits next to the static §6 layer — it never replaces it. The endpoint returns a signed decision with <code>iat</code>/<code>exp</code>, so cached decisions stay deterministic inside the window.<br><br>The decision can only narrow what the static layer already allows; it can never loosen it — §6.1.1 Hierarchy preserved.</div>
 
 <span class="lbl">Question</span>
 <div class="row">Just one: <em>"Does the underlying need feel real enough for the WG to look at it further?"</em></div>
@@ -297,7 +466,7 @@ request=&lt;same JWT&gt;</pre>
 <p class="open-line">Open to any suggestion, question, or further involvement — on the spec, on the implementation, or on the demo.</p>
 
 <div class="contact-line">
-  <span class="name">Justin Dah-Kenangnon</span>
+  <span class="name">Yamonwan Justin Dah-kenangnon</span>
   <a href="mailto:dah.kenangnon@gmail.com">dah.kenangnon@gmail.com</a>
   <span class="sep">·</span>
   <a href="https://github.com/Dahkenangnon">github.com/Dahkenangnon</a>

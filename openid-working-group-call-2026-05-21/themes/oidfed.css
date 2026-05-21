@@ -567,6 +567,312 @@ section .bullets ul li em {
 }
 
 /* ============================================================
+ * "What each library runs" slide — architecture diagram + per-package rows.
+ * SVG on the left shows three top boxes (authority, leaf, oidc) layered
+ * on a wider @oidfed/core foundation; right side lists each package with
+ * its single most-important public API (verified against src/index.ts).
+ * ============================================================ */
+.libs-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 32px;
+  align-items: center;
+  margin-top: 8px;
+}
+.libs-svg {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  display: block;
+}
+.libs-svg .lib-box rect {
+  fill: var(--surface-paper);
+  stroke: var(--brand-400);
+  stroke-width: 1.5;
+}
+.libs-svg .lib-box.core rect {
+  fill: var(--brand-50);
+  stroke: var(--brand-700);
+  stroke-width: 2;
+}
+.libs-svg .lib-box text.name {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  fill: var(--ink-strong);
+  font-weight: 700;
+}
+.libs-svg .lib-box.core text.name {
+  fill: var(--brand-900);
+  font-size: 14px;
+}
+.libs-svg .lib-box text.sub {
+  font-family: "Inter", sans-serif;
+  font-size: 10.5px;
+  fill: var(--ink-muted);
+  font-weight: 500;
+}
+.libs-svg .edges { opacity: 0.85; }
+.libs-svg .edge-labels text.dep {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  fill: var(--ink-dim);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.libs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.lib-row {
+  border-left: 3px solid var(--brand-400);
+  padding: 4px 0 4px 14px;
+}
+.lib-row:first-child { border-left-color: var(--brand-700); }
+.lib-row .pkg {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--brand-700);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 3px;
+}
+.lib-row .role {
+  font-size: 12.5px;
+  color: var(--ink-mid);
+  line-height: 1.42;
+  margin: 0;
+}
+.lib-row .api {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--ink);
+  margin: 5px 0 0;
+  line-height: 1.55;
+}
+.lib-row .api code {
+  background: var(--brand-50);
+  border: 1px solid rgba(58, 89, 200, 0.18);
+  border-radius: var(--r-xs);
+  padding: 1px 5px;
+  color: var(--brand-700);
+  font-size: inherit;
+}
+.lib-row .role code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--brand-700);
+  font-size: 0.95em;
+}
+
+/* ============================================================
+ * Demo-federation slide — single-anchor topology diagram + roster.
+ * Two columns: SVG tree on the left, per-participant rows on the right.
+ * ============================================================ */
+.topo-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 36px;
+  align-items: center;
+  margin-top: 14px;
+}
+.topo-svg {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  display: block;
+}
+.topo-svg .ta circle {
+  fill: var(--surface-paper);
+  stroke: var(--brand-700);
+  stroke-width: 2;
+}
+.topo-svg .ta circle.inner {
+  fill: var(--brand-700);
+  stroke: none;
+}
+.topo-svg .leaf circle {
+  fill: var(--surface-paper);
+  stroke: var(--brand-400);
+  stroke-width: 1.5;
+}
+.topo-svg .leaf circle.inner {
+  fill: var(--brand-400);
+  stroke: none;
+}
+.topo-svg text {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  fill: var(--ink-strong);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.topo-svg text.sub {
+  font-size: 10px;
+  font-weight: 500;
+  fill: var(--ink-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.topo-svg .edges {
+  opacity: 0.85;
+}
+
+.topo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.topo-row {
+  position: relative;
+  padding: 8px 0 8px 16px;
+  border-left: 3px solid var(--brand-400);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+}
+.topo-row:first-child { border-left-color: var(--brand-700); }
+.topo-row .role {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-700);
+  font-weight: 700;
+}
+.topo-row .url {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--ink-strong);
+  font-weight: 600;
+}
+.topo-row .note {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+.topo-row .note code {
+  font-size: 0.95em;
+}
+
+.topo-foot {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-dim);
+  margin-top: 14px;
+  letter-spacing: 0.02em;
+}
+.topo-foot code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--ink-mid);
+}
+
+/* ============================================================
+ * Live-demo slide — two-column grid: main demo + side topology card
+ * ============================================================ */
+.demo-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  margin-top: 14px;
+}
+.demo-main { min-width: 0; }
+.demo-main .demo-list { max-width: none; }
+.demo-main .ex {
+  margin-top: 18px;
+  font-size: 12.5px;
+}
+
+.demo-side {
+  position: relative;
+  background: var(--surface-paper);
+  border: 1px solid var(--ink-hairline);
+  border-radius: var(--r-md);
+  padding: 18px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.demo-side::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--ink-faint);
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+.demo-side .eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-weight: 700;
+}
+.demo-side h3 {
+  font-family: "Inter", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--ink-strong);
+  text-transform: none;
+  margin: 0 0 4px;
+}
+.demo-side .list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+}
+.demo-side .list li {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--ink-mid);
+  margin: 0;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+.demo-side .list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 8px;
+  height: 1.5px;
+  background: var(--brand-400);
+}
+.demo-side .note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  margin: 4px 0 0;
+}
+.demo-side .cta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+.demo-side .cta a {
+  color: var(--brand-700);
+  border-bottom: 0;
+}
+
+/* ============================================================
  * Cover slide — section.cover
  * ============================================================ */
 section.cover {
@@ -631,6 +937,68 @@ section.cover .meta .name {
 }
 section.cover .meta a { color: var(--brand-700); border-bottom: 0; }
 section.cover .meta .dot { color: var(--ink-faint); padding: 0 6px; }
+
+/* Cover sub-tagline — quiet author signature borrowed from the speaker's
+ * GitHub bio. Sits directly under the lede in the natural dead space
+ * between the gradient hero and the bottom contact strip. */
+section.cover .sub-tagline {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  font-style: italic;
+  margin: 14px 0 0;
+  font-weight: 500;
+}
+
+/* ============================================================
+ * Speaker slide — two-column: bullets on the left, portrait card
+ * on the right. Avatar is a circular crop with a cobalt ring, and
+ * a 2-line mono caption sits below.
+ * ============================================================ */
+.speaker-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+  margin-top: 10px;
+}
+.speaker-bio { min-width: 0; }
+.speaker-bio .body-bullets { max-width: 48ch; }
+
+.speaker-portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+.speaker-portrait img {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--brand-500);
+  padding: 4px;
+  background: var(--surface-paper);
+  box-shadow: 0 6px 24px rgba(58, 89, 200, 0.18);
+}
+.speaker-portrait .handle {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  color: var(--brand-700);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 8px 0 0;
+}
+.speaker-portrait .moto {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-dim);
+  font-style: italic;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
 
 /* ============================================================
  * Closing slide — section.closing
