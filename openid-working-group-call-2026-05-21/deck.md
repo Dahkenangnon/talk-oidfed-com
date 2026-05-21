@@ -6,7 +6,7 @@ size: 16:9
 title: "@oidfed implementation overview & feedback"
 description: "@oidfed — the OpenID Federation 1.0 implementation for JavaScript. Presented at the OIDF AB/Connect Working Group, 2026-05-21."
 header: "@oidfed implementation overview & feedback"
-footer: "@oidfed · OIDF AB/Connect WG · 2026-05-21 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; talk.oidfed.com"
+footer: "@oidfed · OIDF AB/Connect WG · 2026-05-21 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oidfed.com"
 html: true
 ---
 
@@ -110,7 +110,6 @@ html: true
 ---
 
 ## Live demo
-### ≈ 90 seconds
 
 <span class="demo-tag">Demo federation · not production</span>
 
@@ -119,6 +118,9 @@ html: true
   <li><code>rp2.single.fed.oidfed.com</code> — <strong>explicit</strong> client registration</li>
   <li><code>explore.oidfed.com</code> — the same federation, visualised</li>
 </ol>
+
+<pre class="ex" style="margin-top:18px;max-width:880px"># Inspect any participant straight from the terminal — no install needed:
+$ npx -y -p @oidfed/cli oidfed entity https://op.single.fed.oidfed.com</pre>
 
 ---
 
@@ -130,19 +132,19 @@ html: true
 <div class="item">
   <span class="num">Item 1</span>
   <span class="title">§12.1.1.1.1 ·<br>request delivery</span>
-  <p class="one-liner">Embedded <code>trust_chain</code> overflows the query carrier — propose a conditional <code>SHOULD&nbsp;NOT</code>.</p>
+  <p class="one-liner">Embedded <code>trust_chain</code> did not fit the query carrier in our deployment — sharing what we saw.</p>
 </div>
 
 <div class="item">
   <span class="num">Item 2</span>
-  <span class="title">§6.2 ·<br>constraints_crit</span>
-  <p class="one-liner">No fail-closed escape hatch for custom constraints — add a mirror of <code>metadata_policy_crit</code>.</p>
+  <span class="title">§6.2 ·<br>constraints side</span>
+  <p class="one-liner">Unknown constraint parameters are silently ignored — a gap compared to the metadata side.</p>
 </div>
 
 <div class="item">
   <span class="num">Item 3</span>
-  <span class="title">Runtime policy ·<br>future-work signal</span>
-  <p class="one-liner">Decisions whose inputs change between requests — candidate for a separate I-D, not a §6 amendment.</p>
+  <span class="title">Runtime policy ·<br>when inputs change</span>
+  <p class="one-liner">Decisions whose inputs change between requests — sharing a need we ran into.</p>
 </div>
 
 </div>
@@ -150,27 +152,27 @@ html: true
 ---
 
 ## Feedback&nbsp;1 &nbsp;·&nbsp; §12.1.1.1.1
-### Request delivery &nbsp;·&nbsp; Issue &amp; Description
+### Request delivery &nbsp;·&nbsp; Observation &amp; Description
 
 <div class="fbd">
 
-<span class="lbl lbl-issue">Issue</span>
-<div class="row">Embedded <code>trust_chain</code> in the Request Object's JWS header overflows the <code>?request=&lt;JWT&gt;</code> query carrier.</div>
+<span class="lbl lbl-issue">Observation</span>
+<div class="row">In our deployment, an embedded <code>trust_chain</code> in the Request Object's JWS header pushes the <code>?request=&lt;JWT&gt;</code> query carrier past common HTTP-intermediary defaults.</div>
 
 <span class="lbl">Description</span>
-<div class="row">A three-statement chain (Leaf + Intermediate + TA) is already 8–12&nbsp;KB — past nginx's default <code>proxy_buffer_size</code> of 8&nbsp;KB. The 502 fires on the <strong>smallest interoperable topology</strong>, not on a deep edge case.<br><br>The spec already acknowledges the size pressure in §12.1.1.1.1 — <em>"it may be necessary to use the HTTP POST method, a request_uri, or PAR for the request"</em> — but reads as a footnote rather than guidance for the production path.</div>
+<div class="row">A three-statement chain (Leaf + Intermediate + TA) is already 8–12&nbsp;KB — past nginx's default <code>proxy_buffer_size</code> of 8&nbsp;KB. The 502 fired on the <strong>smallest interoperable topology</strong>, not on a deep edge case.<br><br>The spec already names the carriers that handle this in §12.1.1.1.1 — <em>"it may be necessary to use the HTTP POST method, a request_uri, or PAR for the request."</em> In our deployment, that note turned out to describe the default path, not an edge case.</div>
 
 </div>
 
 ---
 
 ## Feedback&nbsp;1 &nbsp;·&nbsp; §12.1.1.1.1
-### Request delivery &nbsp;·&nbsp; Proposal &amp; Example
+### Request delivery &nbsp;·&nbsp; Suggestion &amp; Example
 
 <div class="fbd">
 
-<span class="lbl lbl-proposal">Proposal</span>
-<div class="row">Add a conditional <code>SHOULD&nbsp;NOT</code> to §12.1.1.1.1 when <code>trust_chain</code> is embedded. POST <code>form_post</code>, <code>request_uri</code>, or PAR <code>SHOULD</code> be used instead.<br><br>No default change to OIDC Core's request-parameter shape — only conditional, only when the chain is in the header.</div>
+<span class="lbl lbl-proposal">Suggestion</span>
+<div class="row">A clearer note on this — saying the query carrier is risky when <code>trust_chain</code> is embedded, and pointing readers to <code>form_post</code>, <code>request_uri</code>, or PAR — would save the next implementer the same 502.<br><br>No change to OIDC Core's request parameter; the carrier choice only matters when the chain is in the header.</div>
 
 <span class="lbl">Example</span>
 <div class="row">
@@ -188,27 +190,27 @@ request=&lt;same JWT&gt;</pre>
 ---
 
 ## Feedback&nbsp;2 &nbsp;·&nbsp; §6.2
-### Add `constraints_crit` &nbsp;·&nbsp; Issue &amp; Description
+### Constraints-side parallel &nbsp;·&nbsp; Observation &amp; Description
 
 <div class="fbd">
 
-<span class="lbl lbl-issue">Issue</span>
-<div class="row">§6.2 lets federations define custom constraint parameters but mandates <strong>silent-ignore</strong> for unrecognised ones. No fail-closed escape hatch on the constraint side.</div>
+<span class="lbl lbl-issue">Observation</span>
+<div class="row">§6.2 lets federations define custom constraint parameters and requires <strong>silent-ignore</strong> for unrecognised ones. There is no fail-closed equivalent on the constraint side.</div>
 
 <span class="lbl">Description</span>
-<div class="row">The metadata side already has <code>metadata_policy_crit</code> (§6.1.3.2) — a federation can mark a custom operator as required-to-understand, with chain invalidity as the failure mode.<br><br>The constraint side has nothing equivalent. A verifier that hasn't implemented a custom constraint silently admits the chain, breaking the federation's stated guarantee.</div>
+<div class="row">The metadata side already has <code>metadata_policy_crit</code> (§6.1.3.2) — a federation can mark a custom operator as required-to-understand, with chain invalidity as the failure mode.<br><br>On the constraint side there is no equivalent today. A verifier that hasn't implemented a custom constraint silently admits the chain, even when the federation operator considers that constraint essential.</div>
 
 </div>
 
 ---
 
 ## Feedback&nbsp;2 &nbsp;·&nbsp; §6.2
-### Add `constraints_crit` &nbsp;·&nbsp; Proposal &amp; Example
+### Constraints-side parallel &nbsp;·&nbsp; Suggestion &amp; Example
 
 <div class="fbd">
 
-<span class="lbl lbl-proposal">Proposal</span>
-<div class="row">Add a <code>constraints_crit</code> claim to §3.1.3 — exact mirror of <code>metadata_policy_crit</code> semantics. One new claim name, backwards-compatible, low review burden.</div>
+<span class="lbl lbl-proposal">Suggestion</span>
+<div class="row">A <code>constraints_crit</code> claim that mirrors <code>metadata_policy_crit</code> semantics would close this gap. One new claim, no change to existing ones.</div>
 
 <span class="lbl">Example</span>
 <div class="row">
@@ -229,37 +231,37 @@ request=&lt;same JWT&gt;</pre>
 ---
 
 ## Feedback&nbsp;3 &nbsp;·&nbsp; runtime policy
-### Future-work signal &nbsp;·&nbsp; Issue &amp; Description
+### When inputs change between requests &nbsp;·&nbsp; Observation &amp; Description
 
 <div class="fbd">
 
-<span class="lbl lbl-issue">Issue</span>
-<div class="row">§6's extension points (operators, constraints) are code-distributable and static. They cannot encode decisions whose inputs change <strong>between requests</strong> — entity-graph state, federation-operational mode, dynamic naming.</div>
+<span class="lbl lbl-issue">Observation</span>
+<div class="row">§6's extension points (operators, constraints) are made to be shared as code and stay static. They aren't shaped to carry decisions whose inputs change <strong>between requests</strong> — entity-graph state, federation-operational mode, dynamic naming.</div>
 
 <span class="lbl">Description</span>
-<div class="row">Concrete drivers: delegation budgets that narrow during operational incidents, federation-wide capacity envelopes, entity-reliability metrics over sliding windows.<br><br>§6.1.1 <em>Determinism</em> correctly rules these out of static metadata-policy — so the layer cannot live inside <code>metadata_policy</code>. Federations today are forced to fork the operator set or build the policy layer out-of-band, losing federation's signature guarantees.</div>
+<div class="row">Real cases we ran into: delegation budgets that should narrow during incidents, federation-wide capacity limits, entity-reliability numbers over sliding windows.<br><br>§6.1.1 <em>Determinism</em> rightly keeps these out of static metadata-policy — so this kind of decision can't live inside <code>metadata_policy</code>. Federations that need it today have to build it outside the chain, and lose the federation's signature on the result.</div>
 
 </div>
 
 ---
 
 ## Feedback&nbsp;3 &nbsp;·&nbsp; runtime policy
-### Future-work signal &nbsp;·&nbsp; Proposal
+### When inputs change between requests &nbsp;·&nbsp; Direction
 
 <div class="fbd">
 
-<span class="lbl lbl-proposal">Proposal</span>
-<div class="row">Not a §6 amendment. Candidate for a separate I-D — working title <code>oidf-runtime-policy-1_0</code> — defining an opt-in <code>federation_policy_evaluation_endpoint</code> alongside the static layer.<br><br>Signed verdict carries <code>iat</code>/<code>exp</code>, so cached decisions remain deterministic inside the window. The runtime layer MAY further restrict; it MUST NOT loosen the static one — §6.1.1 Hierarchy preserved.</div>
+<span class="lbl lbl-proposal">Direction</span>
+<div class="row">The shape we have in mind is an opt-in <code>federation_policy_evaluation_endpoint</code> that sits next to the static §6 layer — it never replaces it. The endpoint returns a signed decision with <code>iat</code>/<code>exp</code>, so cached decisions stay deterministic inside the window.<br><br>The decision can only narrow what the static layer already allows; it can never loosen it — §6.1.1 Hierarchy preserved.</div>
 
-<span class="lbl">Ask</span>
-<div class="row">Just one: <em>"Is the underlying need real enough to merit a draft I-D, and would the WG entertain it as separate work in the post-1.1 follow-up cycle?"</em></div>
+<span class="lbl">Question</span>
+<div class="row">Just one: <em>"Does the underlying need feel real enough for the WG to look at it further?"</em></div>
 
 </div>
 
 ---
 
 ## Feedback&nbsp;3 &nbsp;·&nbsp; runtime policy
-### Future-work signal &nbsp;·&nbsp; Example
+### When inputs change between requests &nbsp;·&nbsp; Example
 
 <div class="fbd">
 
@@ -274,7 +276,7 @@ request=&lt;same JWT&gt;</pre>
 }</pre>
 </div>
 
-<span class="lbl">Signed verdict</span>
+<span class="lbl">Signed decision</span>
 <div class="row">
 <pre class="ex">// policy-decision+jwt — narrows a static budget federation-wide
 { "iss": "https://policy.ai-fed.example",
