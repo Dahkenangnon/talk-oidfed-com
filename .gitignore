@@ -7,3 +7,10 @@ node_modules/
 # The hand-written root /index.html (landing redirect) stays tracked.
 /openid-working-group-call-*/index.html
 /openid-working-group-call-*/slides.pdf
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
